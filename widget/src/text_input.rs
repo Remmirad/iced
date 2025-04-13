@@ -1642,6 +1642,10 @@ impl<P: text::Paragraph> operation::TextInput for State<P> {
     fn select_all(&mut self) {
         State::select_all(self);
     }
+
+    fn select_range(&mut self, start: usize, end: usize) {
+        State::select_range(self, start, end);
+    }
 }
 
 fn offset<P: text::Paragraph>(
