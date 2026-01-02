@@ -1278,8 +1278,17 @@ fn run_action<'a, P, C>(
             clipboard::Action::Read { target, channel } => {
                 let _ = channel.send(clipboard.read(target));
             }
+            clipboard::Action::ReadContent { channel } => {
+                let _ = channel
+                    .send(clipboard.read_content().map_err(|e| e.to_string()));
+            }
             clipboard::Action::Write { target, contents } => {
                 clipboard.write(target, contents);
+            }
+            clipboard::Action::WriteContent { contents } => {
+                if let Err(err) = clipboard.write_content(contents) {
+                    log::warn!("Failed to write to clipboard: {err}");
+                }
             }
         },
         Action::Window(action) => match action {

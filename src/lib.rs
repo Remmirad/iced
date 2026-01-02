@@ -561,7 +561,9 @@ pub mod task {
 
 pub mod clipboard {
     //! Access the clipboard.
-    pub use crate::runtime::clipboard::{read, read_primary, write, write_primary};
+    pub use crate::runtime::clipboard::{
+        read, read_content, read_primary, write, write_content, write_primary,
+    };
 }
 
 pub mod executor {

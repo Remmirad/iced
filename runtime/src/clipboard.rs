@@ -1,4 +1,6 @@
 //! Access the clipboard.
+use iced_core::clipboard::ClipboardContent;
+
 use crate::core::clipboard::Kind;
 use crate::futures::futures::channel::oneshot;
 use crate::task::{self, Task};
@@ -16,12 +18,24 @@ pub enum Action {
         channel: oneshot::Sender<Option<String>>,
     },
 
+    /// Read the clipboard and produce `T` with the result.
+    ReadContent {
+        /// The channel to send the read contents.
+        channel: oneshot::Sender<Result<ClipboardContent, String>>,
+    },
+
     /// Write the given contents to the clipboard.
     Write {
         /// The clipboard target.
         target: Kind,
         /// The contents to be written.
         contents: String,
+    },
+
+    /// Write the given contents to the clipboard.
+    WriteContent {
+        /// Content
+        contents: ClipboardContent,
     },
 }
 
@@ -32,6 +46,13 @@ pub fn read() -> Task<Option<String>> {
             target: Kind::Standard,
             channel,
         })
+    })
+}
+
+/// Read the current contents of the clipboard.
+pub fn read_content() -> Task<Result<ClipboardContent, String>> {
+    task::oneshot(|channel| {
+        crate::Action::Clipboard(Action::ReadContent { channel })
     })
 }
 
@@ -51,6 +72,11 @@ pub fn write<T>(contents: String) -> Task<T> {
         target: Kind::Standard,
         contents,
     }))
+}
+
+/// Write the given contents to the clipboard.
+pub fn write_content<T>(contents: ClipboardContent) -> Task<T> {
+    task::effect(crate::Action::Clipboard(Action::WriteContent { contents }))
 }
 
 /// Write the given contents to the primary clipboard.

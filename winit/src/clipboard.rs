@@ -1,7 +1,7 @@
 //! Access the clipboard.
 
-use crate::core::clipboard::Kind;
-use std::sync::Arc;
+use crate::core::clipboard::{ClipboardContent, Kind};
+use std::{error::Error, sync::Arc};
 use winit::window::{Window, WindowId};
 
 /// A buffer for short-term storage and transfer within and between
@@ -30,6 +30,7 @@ impl Clipboard {
         // lifetime of the `window_clipboard::Clipboard` because we hold
         // the `Arc<Window>` together with `State`, and enum variant fields
         // get dropped in declaration order.
+
         #[allow(unsafe_code)]
         let clipboard = unsafe { window_clipboard::Clipboard::connect(&window) };
 
@@ -37,7 +38,6 @@ impl Clipboard {
             Ok(clipboard) => State::Connected { clipboard, window },
             Err(_) => State::Unavailable,
         };
-
         Clipboard { state }
     }
 
@@ -57,6 +57,36 @@ impl Clipboard {
                 Kind::Primary => clipboard.read_primary().and_then(Result::ok),
             },
             State::Unavailable => None,
+        }
+    }
+
+    ///
+    pub fn read_content(&self) -> Result<ClipboardContent, Box<dyn Error>> {
+        match &self.state {
+            State::Connected { clipboard, .. } => {
+                let content = clipboard.read_content()?;
+                Ok(match content {
+                    window_clipboard::ClipboardContent::String(s) => {
+                        ClipboardContent::String(s)
+                    }
+                    window_clipboard::ClipboardContent::Paths(path_bufs) => {
+                        ClipboardContent::Paths(path_bufs)
+                    }
+                    window_clipboard::ClipboardContent::Cbor(data) => {
+                        ClipboardContent::Cbor(data)
+                    }
+                    window_clipboard::ClipboardContent::BmpImage(img) => {
+                        ClipboardContent::BmpImage(img)
+                    }
+                    window_clipboard::ClipboardContent::PngImage(img) => {
+                        ClipboardContent::PngImage(img)
+                    }
+                    window_clipboard::ClipboardContent::JpegImage(img) => {
+                        ClipboardContent::JpegImage(img)
+                    }
+                })
+            }
+            State::Unavailable => Err("Clipboard unavailable".into()),
         }
     }
 
@@ -80,6 +110,39 @@ impl Clipboard {
         }
     }
 
+    ///
+    pub fn write_content(
+        &mut self,
+        contents: ClipboardContent,
+    ) -> Result<(), Box<dyn Error>> {
+        match &mut self.state {
+            State::Connected { clipboard, .. } => {
+                let contents = match contents {
+                    ClipboardContent::String(s) => {
+                        window_clipboard::ClipboardContent::String(s)
+                    }
+                    ClipboardContent::Paths(path_bufs) => {
+                        window_clipboard::ClipboardContent::Paths(path_bufs)
+                    }
+                    ClipboardContent::Cbor(data) => {
+                        window_clipboard::ClipboardContent::Cbor(data)
+                    }
+                    ClipboardContent::BmpImage(img) => {
+                        window_clipboard::ClipboardContent::BmpImage(img)
+                    }
+                    ClipboardContent::PngImage(img) => {
+                        window_clipboard::ClipboardContent::PngImage(img)
+                    }
+                    ClipboardContent::JpegImage(img) => {
+                        window_clipboard::ClipboardContent::JpegImage(img)
+                    }
+                };
+                clipboard.write_content(contents)
+            }
+            State::Unavailable => Err("Clipboard unavailable".into()),
+        }
+    }
+
     /// Returns the identifier of the window used to create the [`Clipboard`], if any.
     pub fn window_id(&self) -> Option<WindowId> {
         match &self.state {
@@ -94,7 +157,18 @@ impl crate::core::Clipboard for Clipboard {
         self.read(kind)
     }
 
+    fn read_content(&self) -> Result<ClipboardContent, Box<dyn Error>> {
+        self.read_content()
+    }
+
     fn write(&mut self, kind: Kind, contents: String) {
         self.write(kind, contents);
+    }
+
+    fn write_content(
+        &mut self,
+        contents: ClipboardContent,
+    ) -> Result<(), Box<dyn Error>> {
+        self.write_content(contents)
     }
 }

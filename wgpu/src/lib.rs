@@ -517,7 +517,11 @@ impl Renderer {
                 let mut need_render = Vec::new();
 
                 for instance in &layer.primitives {
-                    let bounds = instance.bounds * scale;
+                    let Some(bounds) = (instance.bounds * scale)
+                        .intersection(&physical_bounds)
+                    else {
+                        continue;
+                    };
 
                     if let Some(clip_bounds) = (instance.bounds * scale)
                         .intersection(&physical_bounds)

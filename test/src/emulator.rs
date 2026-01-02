@@ -533,7 +533,13 @@ impl core::Clipboard for Clipboard {
         self.content.clone()
     }
 
+    fn read_content(&self) -> Option<core::clipboard::ClipboardContent> {
+        None
+    }
+
     fn write(&mut self, _kind: core::clipboard::Kind, contents: String) {
         self.content = Some(contents);
     }
+
+    fn write_content(&mut self, _contents: core::clipboard::ClipboardContent) {}
 }
