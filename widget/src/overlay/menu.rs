@@ -494,6 +494,7 @@ where
 
         let visible_options = &self.options[start..end.min(self.options.len())];
 
+        let last = self.options.len() - 1;
         for (i, option) in visible_options.iter().enumerate() {
             let i = start + i;
             let is_selected = *self.hovered_option == Some(i);
@@ -505,13 +506,19 @@ where
                 height: option_height,
             };
 
+            let border_width_top = if i == 0 { style.border.width } else { 0. };
+            let border_width_bottom =
+                if i == last { style.border.width } else { 0. };
             if is_selected {
                 renderer.fill_quad(
                     renderer::Quad {
                         bounds: Rectangle {
                             x: bounds.x + style.border.width,
+                            y: bounds.y + border_width_top,
                             width: bounds.width - style.border.width * 2.0,
-                            ..bounds
+                            height: bounds.height
+                                - border_width_bottom
+                                - border_width_top,
                         },
                         border: border::rounded(style.border.radius),
                         ..renderer::Quad::default()
