@@ -91,6 +91,7 @@ linux-theme-detection = ["iced_winit/linux-theme-detection"]
 x11 = ["iced_renderer/x11", "iced_winit/x11"]
 # Enables the Unix Wayland backend
 wayland = ["iced_renderer/wayland", "iced_winit/wayland"]
+serde = ["iced_core/serde"]
 
 [dependencies]
 iced_debug.workspace = true
@@ -238,8 +239,8 @@ web-time = "1.1"
 wgpu = { version = "28.0", default-features = false, features = ["std", "wgsl"] }
 winit = { git = "https://github.com/iced-rs/winit.git", rev = "05b8ff17a06562f0a10bb46e6eaacbe2a95cb5ed", default-features = false, features = ["rwh_06"] }
 #window_clipboard = { version = "0.5", default-features = false }
-# window_clipboard = { path = "../window_clipboard"}
-window_clipboard = { git = "https://github.com/Remmirad/window_clipboard.git", branch = "pixler_dev"}
+window_clipboard = { path = "../window_clipboard"}
+# window_clipboard = { git = "https://github.com/Remmirad/window_clipboard.git", branch = "pixler_dev"}
 
 [workspace.lints.rust]
 rust_2018_idioms = { level = "deny", priority = -1 }

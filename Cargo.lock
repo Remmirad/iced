@@ -857,7 +857,6 @@ dependencies = [
 [[package]]
 name = "clipboard_macos"
 version = "0.1.1"
-source = "git+https://github.com/Remmirad/window_clipboard.git?branch=pixler_dev#29a41bfdca7f62fd621a437d9ef38f9201ff8772"
 dependencies = [
  "objc2 0.5.2",
  "objc2-app-kit 0.2.2",
@@ -867,7 +866,6 @@ dependencies = [
 [[package]]
 name = "clipboard_wayland"
 version = "0.2.2"
-source = "git+https://github.com/Remmirad/window_clipboard.git?branch=pixler_dev#29a41bfdca7f62fd621a437d9ef38f9201ff8772"
 dependencies = [
  "smithay-clipboard",
 ]
@@ -875,7 +873,6 @@ dependencies = [
 [[package]]
 name = "clipboard_x11"
 version = "0.4.3"
-source = "git+https://github.com/Remmirad/window_clipboard.git?branch=pixler_dev#29a41bfdca7f62fd621a437d9ef38f9201ff8772"
 dependencies = [
  "thiserror 2.0.18",
  "x11rb",
@@ -7026,7 +7023,6 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 [[package]]
 name = "window_clipboard"
 version = "0.5.1"
-source = "git+https://github.com/Remmirad/window_clipboard.git?branch=pixler_dev#29a41bfdca7f62fd621a437d9ef38f9201ff8772"
 dependencies = [
  "clipboard-win",
  "clipboard_macos",
