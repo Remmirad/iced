@@ -3,6 +3,7 @@ use bitflags::bitflags;
 bitflags! {
     /// The current state of the keyboard modifiers.
     #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     pub struct Modifiers: u32{
         /// The "shift" key.
         const SHIFT = 0b100;

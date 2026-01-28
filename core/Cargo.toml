@@ -18,6 +18,7 @@ advanced = []
 crisp = []
 basic-shaping = []
 advanced-shaping = []
+serde = ["dep:serde","smol_str/serde", "bitflags/serde"]
 
 [dependencies]
 bitflags.workspace = true
