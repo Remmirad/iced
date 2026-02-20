@@ -663,7 +663,9 @@ where
 
         match &event {
             Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left))
-            | Event::Touch(touch::Event::FingerPressed { .. }) => {
+            | Event::Touch(touch::Event::FingerPressed { .. })
+                if !shell.is_event_captured() =>
+            {
                 let state = state::<Renderer>(tree);
                 let cursor_before = state.cursor;
 
